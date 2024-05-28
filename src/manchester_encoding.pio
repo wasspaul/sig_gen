@@ -1,0 +1,65 @@
+;
+; Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+;
+; SPDX-License-Identifier: BSD-3-Clause
+;
+; This is a modified version of the Pico Manchester PIO example.
+; It is transmit only. In addition, the baud rate was slowed down to 5Mbps
+
+.program manchester_tx
+.side_set 1 opt
+
+; This program runs at 120 Mhz. To get to 5Mbps each bit must take
+; 24 clocks.   12 clocks for the first 1/2 bit and 12 for the second 1/2 bit. 
+; 
+; Side-set bit 0 must be mapped to the GPIO used for TX.
+; Autopull must be enabled -- this program does not care about the threshold.
+; The program starts at the public label 'start'.
+
+.wrap_target
+
+do_1:
+    nop         side 0 [7] ; Low for 12 cycles (7, +1 for nop)
+    nop                    ; 9
+    nop                    ; 10
+    nop                    ; 11
+    nop                    ; 12
+    
+    nop         side 1 [2] ; High for 12 cycles (2 delay, +1 for nop)
+    jmp get_bit side 1 [6] ; 3 from above + 7 here + 'get_bit' takes another 2 cycles
+ 
+    
+    
+do_0:
+    nop         side 1 [7] ; Output high for 12 cycles (7, +1 for nop)
+    nop                    ; 9
+    nop                    ; 10
+    nop                    ; 11
+    nop                    ; 12
+    nop         side 0 [7] ; Output low for 12 cycles (7, +1 for nop)
+    nop                    ; 9
+    nop                    ; 10 + 'get_bit' takes another 2 cycles
+    
+    
+public start:
+get_bit:
+    out x, 1               ; Always shift out one bit from OSR to X, so we can
+    jmp !x do_0            ; branch on it. Autopull refills the OSR when empty.
+.wrap
+
+% c-sdk {
+static inline void manchester_tx_program_init(PIO pio, uint sm, uint offset, uint pin, float div) {
+    pio_sm_set_pins_with_mask(pio, sm, 0, 1u << pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+    pio_gpio_init(pio, pin);
+
+    pio_sm_config c = manchester_tx_program_get_default_config(offset);
+    sm_config_set_sideset_pins(&c, pin);
+    sm_config_set_out_shift(&c, true, true, 32);
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
+    sm_config_set_clkdiv(&c, div);
+    pio_sm_init(pio, sm, offset + manchester_tx_offset_start, &c);
+
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
