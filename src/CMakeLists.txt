@@ -9,7 +9,7 @@ pico_sdk_init()
 if (TARGET tinyusb_device)
 	add_executable(sig_gen sig_gen.c)
 	
-	pico_generate_pio_header(sig_gen /home/pi/Documents/pico/paulsProjects/sig_gen/manchester_encoding.pio)
+	pico_generate_pio_header(sig_gen ${CMAKE_CURRENT_LIST_DIR}/manchester_encoding.pio)
 
 	target_link_libraries(sig_gen pico_stdlib hardware_spi hardware_dma
 	                      hardware_pwm pico_multicore pico_rand 

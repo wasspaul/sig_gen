@@ -10,11 +10,11 @@
 ## 1. Introduction
 
 I recently purchased a modern, reasonably capable oscilloscope. While waiting for the new scope to arrive I decided that I needed a
-way to quickly and simply way test its basic functionality.  I looked at several scope manufacturers' demo/test boards and while they 
+way to quickly and simply test its basic functionality.  I looked at several scope manufacturers' demo/test boards and while they 
 were appealing, they were also reasonably pricey (hundreds of dollars).  After careful consideration, I decided to use that money for
 other things and create my own **basic** test board.  My goals were to create an **inexpensive** (couple of $), expandable, and customizable
 system that would be usable by a wide audience. I called the project Sig Gen and decided to open source it.  Just be aware 
-that even though I named it Sig Gen, it is **NOT** a general purpose higly functional signal generator. That was not its intended purpose.
+that even though I named it Sig Gen, it is **NOT** a general purpose highly functional signal generator. That was not its intended purpose.
 
  
 >If you have questions, comments, ideas or if something is
