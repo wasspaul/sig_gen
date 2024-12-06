@@ -1,5 +1,5 @@
 
-# Sig Gen V1.1
+# Sig Gen V1.2
 
 
 1. [Introduction](#1-Introduction)
@@ -60,6 +60,6 @@ This is an open-source project that is free of charge. Use this project in any w
 (as long as it complies to the permissive license files).
 
 ---------------------------------------
-![Sig Gen V1.1](images/WaveFormsBig.jpg)
+![Sig Gen V1.2](images/WaveFormsBig.jpg)
 
 
